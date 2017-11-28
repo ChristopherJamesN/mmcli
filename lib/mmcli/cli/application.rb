@@ -1,5 +1,6 @@
 require 'thor'
 require 'fileutils'
+require 'tempfile'
 
 module Mmcli
  module Cli
@@ -18,12 +19,10 @@ module Mmcli
          f = File.new(manifest, "w")
        end
        if options[:d]
-         File.open("output_file", "w") do |out_file|
-            File.foreach(manifest) do |line|
-              out_file.puts line unless line.chomp == file
-            end
-          end
-        FileUtils.mv("output_file", manifest)
+         tmp = Tempfile.new("extract")
+         open(manifest, "r").each {|l| tmp << l unless l.chomp == file}
+         tmp.close
+         FileUtils.mv(tmp.path, manifest)
        elsif options[:a]
          if File.exist?(file)
            File.open(manifest, "a") do |line|
@@ -34,7 +33,13 @@ module Mmcli
            puts "Error: could not find specified files."
          end
        end
-       puts "#{f.read}" if options[:l]
+       if options[:l]
+         new_array = File.readlines(manifest).sort
+          File.open(manifest,"w") do |line|
+            new_array.each {|n| line.puts(n)}
+          end
+          puts File.read(manifest)
+        end
        puts "-l to list the files in the manifest \n -a to add a file or files to the manifest \n -d to delete a file or files from the manifest \n -h for help" if options[:h]
        f.close
      end
