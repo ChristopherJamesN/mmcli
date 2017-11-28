@@ -19,8 +19,15 @@ Or install it yourself as:
     $ gem install mmcli
 
 ## Usage
+mmcli mmcli <manifestname> [options] <filename>
 
-TODO: Write usage instructions here
+Creates <manifestname> manifest if it does not already exists, and adds (-a) or deletes (-d) the specified <filename> from the manifest.
+
+Options are:
+-l to list the files in the manifest
+-a to add a file or files to the manifest
+-d to delete a file or files from the manifest
+-h for help
 
 ## Development
 
