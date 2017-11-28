@@ -1,26 +1,29 @@
 require 'thor'
+require 'fileutils'
 
 module Mmcli
  module Cli
    class Application < Thor
      include Thor::Actions
 
-     desc 'mmcli MANIFEST [options] FILE', 'Add file to, or create, the manifest file MANIFEST and add or delete the file FILE.'
+     desc 'mmcli <manifestname> [options] <filename>', 'Creates <manifestname> manifest if it does not already exists, and adds (-a) or deletes (-d) the specified <filename> from the manifest.'
      option :l
      option :d
      option :a
      option :h
-     def mmcli(manifest, file)
+     def mmcli(manifest, file = nil)
        if File.exist?(manifest)
          f = File.open(manifest, "r+")
        else
          f = File.new(manifest, "w")
        end
        if options[:d]
-         if f.include?(file)
-           f.delete(file)
-           puts "Successfully deleted #{file} from manifest."
-         end
+         File.open("output_file", "w") do |out_file|
+            File.foreach(manifest) do |line|
+              out_file.puts line unless line.chomp == file
+            end
+          end
+        FileUtils.mv("output_file", manifest)
        elsif options[:a]
          if File.exist?(file)
            File.open(manifest, "a") do |line|
