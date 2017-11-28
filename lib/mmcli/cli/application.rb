@@ -22,13 +22,20 @@ module Mmcli
          end
          if options[:d]
            tmp = Tempfile.new("extract")
-           open(manifest, "r").each {|l| tmp << l unless l.chomp == options[:d]}
+           open(manifest, "r").each {|l| tmp << l unless (l.chomp == options[:d] || l.chomp == options[:l])}
            tmp.close
            FileUtils.mv(tmp.path, manifest)
          elsif options[:a]
-           if File.exist?(options[:a] || options[:al])
+           if options[:l]
+             if File.exist?(options[:l])
+               File.open(manifest, "a") do |line|
+                 line.puts "#{options[:l]}"
+               end
+               puts "Files successfully added to manifest."
+             end
+          elsif File.exist?(options[:a])
              File.open(manifest, "a") do |line|
-               line.puts "#{options[:a] || options[:al]}"
+               line.puts "#{options[:a]}"
              end
              puts "Files successfully added to manifest."
            else
