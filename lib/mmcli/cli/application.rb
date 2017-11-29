@@ -23,8 +23,14 @@ module Mmcli
          end
          if options[:d]
             txt_file_paths = []
-            Find.find(options[:l]) do |path|
-              txt_file_paths << path if path =~ /.*\.txt$/
+            if options[:l]
+              Find.find(options[:l]) do |path|
+                txt_file_paths << path if path =~ /.*\.txt$/
+              end
+            else
+              Find.find(options[:d]) do |path|
+                txt_file_paths << path if path =~ /.*\.txt$/
+              end
             end
             tmp = Tempfile.new("extract")
             open(manifest, "r").each {|l| tmp << l unless (l.chomp == options[:d] || l.chomp == options[:l] || l.chomp == txt_file_paths[0]) }
