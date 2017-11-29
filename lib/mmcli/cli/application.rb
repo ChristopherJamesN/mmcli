@@ -34,14 +34,13 @@ module Mmcli
                   Find.find(options[:l]) do |path|
                     txt_file_paths << path if path =~ /.*\.txt$/
                   end
-                  #Dir.glob("#{options[:l]}/**/*.txt")[0]
                   line.puts "#{txt_file_paths[0]}"
                 end
                 puts "Files successfully added to manifest."
               end
             elsif File.exist?(options[:a])
                File.open(manifest, "a") do |line|
-                 txt_file_paths
+                 txt_file_paths = []
                  Find.find(options[:a]) do |path|
                    txt_file_paths << path if path =~ /.*\.txt$/
                  end
@@ -62,10 +61,6 @@ module Mmcli
          puts "-l to list the files in the manifest \n -a to add a file or files to the manifest \n -d to delete a file or files from the manifest \n -h for help" if options[:h]
          f.close
        end
-
-       #no_commands do
-        # self.mmcli
-       #end
 
    end
  end
