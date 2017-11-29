@@ -1,1 +1,7 @@
+a1/b1/c1.txt
+a1/b1/c1.txt
+a2/b1.txt
 b1.txt
+b1.txt
+c1.txt
+c1.txt

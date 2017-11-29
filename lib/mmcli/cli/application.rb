@@ -24,30 +24,8 @@ module Mmcli
          if options[:d]
            delete(manifest, options[:d], options[:l])
          elsif options[:a]
-            if options[:l]
-              if File.exist?(options[:l])
-                File.open(manifest, "a") do |line|
-                  txt_file_paths = []
-                  Find.find(options[:l]) do |path|
-                    txt_file_paths << path if path =~ /.*\.txt$/
-                  end
-                  line.puts "#{txt_file_paths[0]}"
-                end
-                puts "Files successfully added to manifest."
-              end
-            elsif File.exist?(options[:a])
-               File.open(manifest, "a") do |line|
-                 txt_file_paths = []
-                 Find.find(options[:a]) do |path|
-                   txt_file_paths << path if path =~ /.*\.txt$/
-                 end
-                 line.puts "#{txt_file_paths[0]}"
-               end
-               puts "Files successfully added to manifest."
-             else
-               puts "Error: could not find specified files."
-             end
-           end
+            add(manifest, options[:a], options[:l])
+         end
          if options[:l]
            new_array = File.readlines(manifest).sort
             File.open(manifest,"w") do |line|
@@ -75,6 +53,32 @@ module Mmcli
          open(manifest, "r").each {|l| tmp << l unless (l.chomp == option_d || l.chomp == option_l || l.chomp == txt_file_paths[0]) }
          tmp.close
          FileUtils.mv(tmp.path, manifest)
+       end
+
+       def add (manifest, option_a, option_l = nil)
+         if option_l
+           if File.exist?(option_l)
+             File.open(manifest, "a") do |line|
+               txt_file_paths = []
+               Find.find(option_l) do |path|
+                 txt_file_paths << path if path =~ /.*\.txt$/
+               end
+               line.puts "#{txt_file_paths[0]}"
+             end
+             puts "Files successfully added to manifest."
+           end
+         elsif File.exist?(option_a)
+            File.open(manifest, "a") do |line|
+              txt_file_paths = []
+              Find.find(option_a) do |path|
+                txt_file_paths << path if path =~ /.*\.txt$/
+              end
+              line.puts "#{txt_file_paths[0]}"
+            end
+            puts "Files successfully added to manifest."
+          else
+            puts "Error: could not find specified files."
+          end
        end
      }
 
