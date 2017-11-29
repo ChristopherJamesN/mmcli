@@ -21,18 +21,17 @@ module Mmcli
          else
            f = File.new(manifest, "w")
          end
+
          if options[:d]
            delete(manifest, options[:d], options[:l])
          elsif options[:a]
             add(manifest, options[:a], options[:l])
          end
+
          if options[:l]
-           new_array = File.readlines(manifest).sort
-            File.open(manifest,"w") do |line|
-              new_array.each {|n| line.puts(n)}
-            end
-            puts File.read(manifest)
-          end
+           list(manifest)
+         end
+
          puts "-l to list the files in the manifest \n -a to add a file or files to the manifest \n -d to delete a file or files from the manifest \n -h for help" if options[:h]
          f.close
        end
@@ -79,6 +78,14 @@ module Mmcli
           else
             puts "Error: could not find specified files."
           end
+       end
+
+       def list(manifest)
+         new_array = File.readlines(manifest).sort
+          File.open(manifest,"w") do |line|
+            new_array.each {|n| line.puts(n)}
+          end
+          puts File.read(manifest)
        end
      }
 
