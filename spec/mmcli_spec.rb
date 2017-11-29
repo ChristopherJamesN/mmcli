@@ -42,7 +42,7 @@ RSpec.describe Mmcli do
     it "Does not accept the delete and add option at the same time." do
       args =["mmcli", "manifest", "-ad", "b1.txt"]
       Mmcli::Cli::Application.start(args)
-      expect(File.read("manifest")).to eq("b1.txt\nc1.txt\n")
+      expect(File.read("manifest")).to eq("c1.txt\n")
     end
 
     it "Can accept the list(-l) option with any other option, display after execution of other actions." do

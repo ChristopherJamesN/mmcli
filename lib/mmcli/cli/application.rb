@@ -16,6 +16,11 @@ module Mmcli
 
        def mmcli(manifest)
 
+         if (options[:a] && options[:d])
+           puts "You cannot specify both the add and delete option simulatenously."
+           return
+         end
+
          if File.exist?(manifest)
            f = File.open(manifest, "r+")
          else
