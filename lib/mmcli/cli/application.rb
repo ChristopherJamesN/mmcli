@@ -32,7 +32,10 @@ module Mmcli
            list(manifest)
          end
 
-         puts "-l to list the files in the manifest \n -a to add a file or files to the manifest \n -d to delete a file or files from the manifest \n -h for help" if options[:h]
+         if options[:h]
+           puts "-l to list the files in the manifest \n -a to add a file or files to the manifest \n -d to delete a file or files from the manifest \n -h for help"
+         end
+         
          f.close
        end
 
