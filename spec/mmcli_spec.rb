@@ -1,7 +1,9 @@
 RSpec.describe Mmcli do
 
-  #Before run delete manifest
-  File.delete("manifest")
+  #Before running tests delete manifest test file if previously created.
+  if File.exist?("manifest")
+    File.delete("manifest")
+  end
 
   it "has a version number" do
     expect(Mmcli::VERSION).not_to be nil
