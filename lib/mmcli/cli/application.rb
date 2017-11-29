@@ -35,7 +35,7 @@ module Mmcli
          if options[:h]
            puts "-l to list the files in the manifest \n -a to add a file or files to the manifest \n -d to delete a file or files from the manifest \n -h for help"
          end
-         
+
          f.close
        end
 
@@ -68,6 +68,8 @@ module Mmcli
                line.puts "#{txt_file_paths[0]}"
              end
              puts "Files successfully added to manifest."
+           else
+             puts "Error: could not find specified files."
            end
          elsif File.exist?(option_a)
             File.open(manifest, "a") do |line|
