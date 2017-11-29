@@ -22,33 +22,33 @@ RSpec.describe Mmcli do
     end
 
     it "Can list items in the manifest file in a case-insensitive alphabetical order." do
-      args =["mmcli", "manifest", "-al", "b1.txt"]
+      args =["mmcli", "manifest", "-al", "a2"]
       Mmcli::Cli::Application.start(args)
-      expect(File.read("manifest")).to eq("b1.txt\nb1.txt\nc1.txt\n")
+      expect(File.read("manifest")).to eq("a2/b1.txt\nb1.txt\nc1.txt\n")
     end
 
     it "Specified path(s) should be added to the manifest file only if all the paths are files that actually exist." do
       args =["mmcli", "manifest", "-a", "d1.txt"]
       Mmcli::Cli::Application.start(args)
-      expect(File.read("manifest")).to eq("b1.txt\nb1.txt\nc1.txt\n")
+      expect(File.read("manifest")).to eq("a2/b1.txt\nb1.txt\nc1.txt\n")
     end
 
     it "The specified path(s) should be removed from the manifest file or ignored if they are not in the manifest." do
       args =["mmcli", "manifest", "-d", "b1.txt"]
       Mmcli::Cli::Application.start(args)
-      expect(File.read("manifest")).to eq("c1.txt\n")
+      expect(File.read("manifest")).to eq("a2/b1.txt\nc1.txt\n")
     end
 
     it "Does not accept the delete and add option at the same time." do
-      args =["mmcli", "manifest", "-ad", "b1.txt"]
+      args =["mmcli", "manifest", "-ad", "c1.txt"]
       Mmcli::Cli::Application.start(args)
-      expect(File.read("manifest")).to eq("c1.txt\n")
+      expect(File.read("manifest")).to eq("a2/b1.txt\nc1.txt\n")
     end
 
     it "Can accept the list(-l) option with any other option, display after execution of other actions." do
       args =["mmcli", "manifest", "-al", "c1.txt"]
       Mmcli::Cli::Application.start(args)
-      expect(File.read("manifest")).to eq("c1.txt\nc1.txt\n")
+      expect(File.read("manifest")).to eq("a2/b1.txt\nc1.txt\nc1.txt\n")
     end
 
     it "Can print a success message if it executed successfully." do
