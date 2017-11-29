@@ -22,8 +22,12 @@ module Mmcli
            f = File.new(manifest, "w")
          end
          if options[:d]
+            txt_file_paths = []
+            Find.find(options[:l]) do |path|
+              txt_file_paths << path if path =~ /.*\.txt$/
+            end
             tmp = Tempfile.new("extract")
-            open(manifest, "r").each {|l| tmp << l unless (l.chomp == options[:d] || l.chomp == options[:l]) }
+            open(manifest, "r").each {|l| tmp << l unless (l.chomp == options[:d] || l.chomp == options[:l] || l.chomp == txt_file_paths[0]) }
             tmp.close
             FileUtils.mv(tmp.path, manifest)
          elsif options[:a]
