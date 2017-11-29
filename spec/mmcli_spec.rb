@@ -52,15 +52,13 @@ RSpec.describe Mmcli do
     end
 
     it "Can print a success message if it executed successfully." do
-      args =["mmcli", "manifest", "-al", "c1.txt"]
-      list = Mmcli::Cli::Application.start(args)
-      expect(list).to eq("Files successfully added to manifest.")
+      args =["mmcli", "manifest", "-a", "c1.txt"]
+      expect{ Mmcli::Cli::Application.start(args) }.to output("Files successfully added to manifest.\n").to_stdout
     end
 
     it "Can print a failure message if it failed to execute." do
-      args =["mmcli", "manifest", "-al", "d1.txt"]
-      list = Mmcli::Cli::Application.start(args)
-      expect(list).to eq("Error: could not find specified files.")
+      args =["mmcli", "manifest", "-a", "d1.txt"]
+      expect{ Mmcli::Cli::Application.start(args) }.to output("Error: could not find specified files.\n").to_stdout
     end
 
   end
