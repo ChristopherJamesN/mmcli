@@ -22,20 +22,7 @@ module Mmcli
            f = File.new(manifest, "w")
          end
          if options[:d]
-            txt_file_paths = []
-            if options[:l]
-              Find.find(options[:l]) do |path|
-                txt_file_paths << path if path =~ /.*\.txt$/
-              end
-            else
-              Find.find(options[:d]) do |path|
-                txt_file_paths << path if path =~ /.*\.txt$/
-              end
-            end
-            tmp = Tempfile.new("extract")
-            open(manifest, "r").each {|l| tmp << l unless (l.chomp == options[:d] || l.chomp == options[:l] || l.chomp == txt_file_paths[0]) }
-            tmp.close
-            FileUtils.mv(tmp.path, manifest)
+           delete(manifest, options[:d], options[:l])
          elsif options[:a]
             if options[:l]
               if File.exist?(options[:l])
@@ -71,6 +58,25 @@ module Mmcli
          puts "-l to list the files in the manifest \n -a to add a file or files to the manifest \n -d to delete a file or files from the manifest \n -h for help" if options[:h]
          f.close
        end
+
+      no_commands {
+       def delete (manifest, option_d, option_l = nil)
+         txt_file_paths = []
+         if option_l
+           Find.find(option_l) do |path|
+             txt_file_paths << path if path =~ /.*\.txt$/
+           end
+         else
+           Find.find(option_d) do |path|
+             txt_file_paths << path if path =~ /.*\.txt$/
+           end
+         end
+         tmp = Tempfile.new("extract")
+         open(manifest, "r").each {|l| tmp << l unless (l.chomp == option_d || l.chomp == option_l || l.chomp == txt_file_paths[0]) }
+         tmp.close
+         FileUtils.mv(tmp.path, manifest)
+       end
+     }
 
    end
  end
