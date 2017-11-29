@@ -7,7 +7,9 @@ RSpec.describe Mmcli do
   describe ".mmcli" do
 
     it "Can create and/or update the provided manifest file." do
-      expect Mmcli::Cli::Application.start(ARGV)
+      args = ["mmcli", "-a", "b1.txt"]
+      options = Mmcli::Cli::Application.start(args)
+      expect(options).to eq({ "a" => true })
     end
 
     it "Each path in the manifest file should be on a separate line." do

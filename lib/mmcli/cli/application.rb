@@ -1,6 +1,7 @@
 require 'thor'
 require 'fileutils'
 require 'tempfile'
+require 'find'
 
 module Mmcli
  module Cli
@@ -21,27 +22,36 @@ module Mmcli
            f = File.new(manifest, "w")
          end
          if options[:d]
-           tmp = Tempfile.new("extract")
-           open(manifest, "r").each {|l| tmp << l unless (l.chomp == options[:d] || l.chomp == options[:l])}
-           tmp.close
-           FileUtils.mv(tmp.path, manifest)
+            tmp = Tempfile.new("extract")
+            open(manifest, "r").each {|l| tmp << l unless (l.chomp == options[:d] || l.chomp == options[:l]) }
+            tmp.close
+            FileUtils.mv(tmp.path, manifest)
          elsif options[:a]
-           if options[:l]
-             if File.exist?(options[:l])
+            if options[:l]
+              if File.exist?(options[:l])
+                File.open(manifest, "a") do |line|
+                  txt_file_paths = []
+                  Find.find(options[:l]) do |path|
+                    txt_file_paths << path if path =~ /.*\.txt$/
+                  end
+                  #Dir.glob("#{options[:l]}/**/*.txt")[0]
+                  line.puts "#{txt_file_paths[0]}"
+                end
+                puts "Files successfully added to manifest."
+              end
+            elsif File.exist?(options[:a])
                File.open(manifest, "a") do |line|
-                 line.puts "#{options[:l]}"
+                 txt_file_paths
+                 Find.find(options[:a]) do |path|
+                   txt_file_paths << path if path =~ /.*\.txt$/
+                 end
+                 line.puts "#{txt_file_paths[0]}"
                end
                puts "Files successfully added to manifest."
+             else
+               puts "Error: could not find specified files."
              end
-          elsif File.exist?(options[:a])
-             File.open(manifest, "a") do |line|
-               line.puts "#{options[:a]}"
-             end
-             puts "Files successfully added to manifest."
-           else
-             puts "Error: could not find specified files."
            end
-         end
          if options[:l]
            new_array = File.readlines(manifest).sort
             File.open(manifest,"w") do |line|
