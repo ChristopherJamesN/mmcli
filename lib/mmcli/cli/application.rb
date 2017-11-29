@@ -38,7 +38,7 @@ module Mmcli
          end
 
          if options[:h]
-           puts "-l to list the files in the manifest \n -a to add a file or files to the manifest \n -d to delete a file or files from the manifest \n -h for help"
+           help
          end
 
          f.close
@@ -96,6 +96,10 @@ module Mmcli
             new_array.each {|n| line.puts(n)}
           end
           puts File.read(manifest)
+       end
+
+       def help
+         puts "-l to list the files in the manifest \n -a to add a file or files to the manifest \n -d to delete a file or files from the manifest \n -h for help"
        end
      }
 
