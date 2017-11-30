@@ -49,12 +49,16 @@ module Mmcli
        def delete (manifest, option_d, option_l = nil)
          txt_file_paths = []
          if option_l
-           Find.find(option_l) do |path|
-             txt_file_paths << path if path =~ /.*\.txt$/
+           if File.exist?(option_l)
+             Find.find(option_l) do |path|
+               txt_file_paths << path if path =~ /.*\.txt$/
+             end
            end
          else
-           Find.find(option_d) do |path|
-             txt_file_paths << path if path =~ /.*\.txt$/
+           if File.exist?(option_d)
+             Find.find(option_d) do |path|
+               txt_file_paths << path if path =~ /.*\.txt$/
+             end
            end
          end
          tmp = Tempfile.new("extract")
