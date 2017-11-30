@@ -8,11 +8,12 @@ module Mmcli
    class Application < Thor
      include Thor::Actions
 
+     global_option :h
+
      desc 'mmcli <manifestname> [options] <filename>', 'Creates <manifestname> manifest if it does not already exists, and adds (-a) or deletes (-d) the specified <filename> from the manifest.'
      option :d
      option :a
      option :l
-     option :h
 
        def mmcli(manifest)
 
