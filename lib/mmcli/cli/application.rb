@@ -16,7 +16,7 @@ module Mmcli
 
      desc 'mmcli <manifestname> [options] <filename>', 'Creates <manifestname> manifest if it does not already exists, and adds (-a) or deletes (-d) the specified <filename> from the manifest.'
 
-       def mmcli(manifest)
+       def mmcli(manifest = "pwd.man")
 
          if (options[:a] && options[:d])
            puts "You cannot specify both the add and delete option simulatenously."
