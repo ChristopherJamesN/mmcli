@@ -60,7 +60,7 @@ module Mmcli
 
          f.close
        end
-       #default_task :mmcli
+       default_task :mmcli
 
       no_commands {
        def delete (manifest, option_d, option_l = nil)
