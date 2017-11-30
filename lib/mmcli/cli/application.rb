@@ -53,6 +53,10 @@ module Mmcli
              Find.find(option_l) do |path|
                txt_file_paths << path if path =~ /.*\.txt$/
              end
+           elsif File.exist?(option_d)
+             Find.find(option_d) do |path|
+               txt_file_paths << path if path =~ /.*\.txt$/
+             end
            end
          else
            if File.exist?(option_d)
