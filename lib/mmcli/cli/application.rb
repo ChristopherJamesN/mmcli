@@ -78,6 +78,15 @@ module Mmcli
                line.puts "#{txt_file_paths[0]}"
              end
              puts "Files successfully added to manifest."
+           elsif File.exist?(option_a)
+             File.open(manifest, "a") do |line|
+               txt_file_paths = []
+               Find.find(option_a) do |path|
+                 txt_file_paths << path if path =~ /.*\.txt$/
+               end
+               line.puts "#{txt_file_paths[0]}"
+             end
+             puts "Files successfully added to manifest."
            else
              puts "Error: could not find specified files."
            end
