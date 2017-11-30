@@ -7,7 +7,6 @@ module Mmcli
  module Cli
    class Application < Thor
      include Thor::Actions
-    # map %w[-a -d -l] => :mmcli
 
      class_option :h
      class_option :l
