@@ -9,9 +9,9 @@ module Mmcli
      include Thor::Actions
 
      class_option :h
-     class_option :l
-     class_option :d
-     class_option :a
+     class_option :l, :type => :array, :lazy_default => []
+     class_option :d, :type => :array, :lazy_default => []
+     class_option :a, :type => :array, :lazy_default => []
 
      desc 'mmcli <manifestname> [options] <filename>', 'Creates <manifestname> manifest if it does not already exists, and adds (-a) or deletes (-d) the specified <filename> from the manifest.'
 
@@ -29,9 +29,25 @@ module Mmcli
          end
 
          if options[:d]
-           delete(manifest, options[:d], options[:l])
+           if options[:l] && options[:d].length == 0
+             options[:l].each do |option_l|
+               delete(manifest, option_l, options[:d])
+             end
+           else
+             options[:d].each do |option_d|
+               delete(manifest, option_d, options[:l])
+             end
+           end
          elsif options[:a]
-            add(manifest, options[:a], options[:l])
+           if options[:l] && options[:a].length == 0
+             options[:l].each do |option_l|
+              add(manifest, option_l, options[:a])
+             end
+           else
+             options[:a].each do |option_a|
+              add(manifest, option_a, options[:l])
+             end
+           end
          end
 
          if options[:l]
@@ -44,26 +60,15 @@ module Mmcli
 
          f.close
        end
+       #default_task :mmcli
 
       no_commands {
        def delete (manifest, option_d, option_l = nil)
          txt_file_paths = []
-         if option_l
-           if File.exist?(option_l)
-             Find.find(option_l) do |path|
-               txt_file_paths << path if path =~ /.*\.txt$/
-             end
-           elsif File.exist?(option_d)
-             Find.find(option_d) do |path|
-               txt_file_paths << path if path =~ /.*\.txt$/
-             end
-           end
-         else
-           if File.exist?(option_d)
-             Find.find(option_d) do |path|
-               txt_file_paths << path if path =~ /.*\.txt$/
-             end
-           end
+         if File.exist?(option_d)
+          Find.find(option_d) do |path|
+            txt_file_paths << path if path =~ /.*\.txt$/
+          end
          end
          tmp = Tempfile.new("extract")
          open(manifest, "r").each {|l| tmp << l unless (l.chomp == option_d || l.chomp == option_l || l.chomp == txt_file_paths[0]) }
@@ -72,29 +77,7 @@ module Mmcli
        end
 
        def add (manifest, option_a, option_l = nil)
-         if option_l
-           if File.exist?(option_l)
-             File.open(manifest, "a") do |line|
-               txt_file_paths = []
-               Find.find(option_l) do |path|
-                 txt_file_paths << path if path =~ /.*\.txt$/
-               end
-               line.puts "#{txt_file_paths[0]}"
-             end
-             puts "Files successfully added to manifest."
-           elsif File.exist?(option_a)
-             File.open(manifest, "a") do |line|
-               txt_file_paths = []
-               Find.find(option_a) do |path|
-                 txt_file_paths << path if path =~ /.*\.txt$/
-               end
-               line.puts "#{txt_file_paths[0]}"
-             end
-             puts "Files successfully added to manifest."
-           else
-             puts "Error: could not find specified files."
-           end
-         elsif File.exist?(option_a)
+         if File.exist?(option_a)
             File.open(manifest, "a") do |line|
               txt_file_paths = []
               Find.find(option_a) do |path|
