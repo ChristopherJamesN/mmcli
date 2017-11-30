@@ -117,7 +117,7 @@ module Mmcli
        end
 
        def help
-         puts "-l to list the files in the manifest \n -a to add a file or files to the manifest \n -d to delete a file or files from the manifest \n -h for help"
+         puts "Usage: mmcli mmcli <manifestname> [options] <filename>\n-l to list the files in the manifest \n-a to add a file or files to the manifest \n-d to delete a file or files from the manifest \n-h for help"
        end
      }
 
