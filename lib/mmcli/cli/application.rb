@@ -7,14 +7,14 @@ module Mmcli
  module Cli
    class Application < Thor
      include Thor::Actions
+    # map %w[-a -d -l] => :mmcli
 
-     option :h
-     option :l
+     class_option :h
+     class_option :l
+     class_option :d
+     class_option :a
 
      desc 'mmcli <manifestname> [options] <filename>', 'Creates <manifestname> manifest if it does not already exists, and adds (-a) or deletes (-d) the specified <filename> from the manifest.'
-     option :d
-     option :a
-
 
        def mmcli(manifest)
 
